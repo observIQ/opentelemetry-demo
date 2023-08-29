@@ -645,7 +645,7 @@ services:
 
   # OpenTelemetry Collector
   otelcol:
-    image: ghcr.io/observiq/observiq-otel-collector:1.32.0
+    image: ghcr.io/observiq/observiq-otel-collector:1.33.0
     container_name: otel-col
     deploy:
       resources:
