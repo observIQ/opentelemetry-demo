@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Copyright observIQ
+# SPDX-License-Identifier: Apache-2.0
 
 source .env
 
