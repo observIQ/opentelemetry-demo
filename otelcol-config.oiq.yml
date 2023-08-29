@@ -6,27 +6,47 @@ receivers:
     protocols:
       grpc:
       http:
+        cors:
+          allowed_origins:
+            - "http://*"
+            - "https://*"
 
 exporters:
-  jaeger:
-    endpoint: "jaeger:14250"
+  logging:
+  otlp:
+    endpoint: "jaeger:4317"
     tls:
       insecure: true
-  logging:
   prometheus:
     endpoint: "otelcol:9464"
+    resource_to_telemetry_conversion:
+      enabled: true
+    enable_open_metrics: true
   googlecloud:
 
 processors:
   batch:
+  filter:
+    metrics:
+      exclude:
+        match_type: strict
+        metric_names:
+          - queueSize
+
+connectors:
+  spanmetrics:
 
 service:
   pipelines:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [logging, jaeger, googlecloud]
+      exporters: [logging, jaeger, googlecloud, spanmetrics]
     metrics:
       receivers: [otlp]
       processors: [batch]
-      exporters: [prometheus, logging, googlecloud]
+      exporters: [prometheus, logging, googlecloud, spanmetrics]
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [logging]
